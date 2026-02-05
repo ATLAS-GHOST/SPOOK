@@ -1,0 +1,117 @@
+#21-01-2026 1856 
+
+########## SO FAR ##########
+Any special numbers?
+100k PPS  -> 50% increase switching to c++
+
+
+
+Reading Grafana documentation to optimise it
+Docker Daemon - Core background process which manages docker functionalities
+
+
+########## CURRENT PLANS ##########
+
+get docker with grafana up and running
+measure docker stats on cpu etc
+optimise docker and then measure stats
+
+prometheus alternative - StatsD + Graphite?
+
+#########################################
+
+21-01-2026 1959 
+Finished work
+Setup prometheus for sender loop - packet size & bytes sent
+There are some others which Ioannis wants - read notes
+
+_____________________________________________________________________________
+
+22-01-2026
+
+JUst adding prom exposer for receiver loop now
+
+Added prometheus metrics but now getting packet loss - optimise docker?? COUld use diff exposing tool
+
+
+_____________________________________________________________________________
+
+24-01-2026
+Got Docker started and no packet loss without grafana. havent tested with grafana yet
+
+2026-01-24 20:46:46.293 | Socket receive buffer set to: 425,984 bytes
+2026-01-24 20:46:46.293 | UDP PORT 9000: LISTENING
+2026-01-24 20:46:46.293 | Packets Sent: 1883553
+2026-01-24 20:46:46.293 | Packets Received: 283449
+2026-01-24 20:46:46.293 | Packets Lost: 1600104
+2026-01-24 20:46:46.293 | Packets Loss Percentage: 84.9514
+
+:(
+
+    docker compose logs -f
+
+
+_____________________________________________________________________________
+
+26-01-2026
+
+Got docker engine to work
+GOt sender and receiver to work
+MAnaged to reduce packet loss by increasing the buffer of the application
+Still need to work on reducing the packet loss - still too high
+
+use docker compose -d
+use the logs cmd
+change the sys bugges - not sure of impact on the overall project
+
+udp_receiver  | Socket receive buffer set to: 52,428,800 bytes
+udp_receiver  | UDP PORT 9000: LISTENING
+udp_receiver  | Packets Sent: 1026863
+udp_receiver  | Packets Received: 960601
+udp_receiver  | Packets Lost: 66262
+udp_receiver  | Packets Loss Percentage: 6.4529
+
+WE'RE GETTING SOMEWHERE ALHAMDULILLAH!
+
+_____________________________________________________________________________
+
+27-01-2026
+
+systemctl start docker
+docker compose up -d
+docker compose logs -f
+docker start udp_receiver
+
+ sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647 
+
+
+udp_receiver  | Socket receive buffer set to: 2,000,000,000 bytes
+udp_receiver  | UDP PORT 9000: LISTENING
+udp_receiver  | Packets Sent: 1283038
+udp_receiver  | Packets Received: 1283038
+udp_receiver  | Packets Lost: 0
+udp_receiver  | Packets Loss Percentage: 0.0000
+udp_receiver exited with code 0
+
+ALHAMDULILLAH!
+
+Increased buffer size to max
+USed network host 
+
+Prometheus : http://localhost:9090
+DOcker =  http://localhost:3000     /login
+
+_____________________________________________________________________________
+
+ALHAMDULILLAH I got some pre made metrics to use from prometheus node_exporter
+Tomorrow I will get the pcie and NIC and pid metricss etc including cpu
+ALHAMDULILLAH THe packets i put are already in there
+
+cd to node_exporter in downloads
+then do ./node_exporter
+
+http://localhost:9100/metrics
+
+_____________________________________________________________________________
+
+LOwer time.sleep gives higher cpu usage
