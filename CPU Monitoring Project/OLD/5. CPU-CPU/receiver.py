@@ -23,8 +23,8 @@ except Exception as e:
     print("UDP PORT 9000: CLOSED")    #remove this after done
     sock.close()
 
-sock.bind(("10.0.0.2", 9000))
-print("UDP PORT 9000: LISTENING on...")
+sock.bind(("192.168.1.44", 9001))
+print("RECEIVER UDP PORT 9000: LISTENING")
 
 
 def find_nic_pcie_path():
@@ -57,8 +57,6 @@ def read_pcie_stats(pcie_path):
         print(f"Error reading PCIe stats: {e}")
     
     return stats
-
-
 
 
 packets_received_p = Counter('packets_received_total', 'Total packets received')

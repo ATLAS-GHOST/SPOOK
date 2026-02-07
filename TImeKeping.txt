@@ -78,6 +78,7 @@ _____________________________________________________________________________
 27-01-2026
 
 systemctl start docker
+docker rm prometheus grafana
 docker compose up -d
 docker compose logs -f
 docker start udp_receiver
@@ -115,3 +116,11 @@ http://localhost:9100/metrics
 _____________________________________________________________________________
 
 LOwer time.sleep gives higher cpu usage
+
+
+_____________________________________________________________________________
+5/2/2026
+
+Got a namspace to do something
+GOt some eth packets but metrics messed up
+HOw would this link with gpu???

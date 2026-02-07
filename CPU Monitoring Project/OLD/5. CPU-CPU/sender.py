@@ -9,7 +9,6 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # HP :    Max buffer size: 425 984
 buffer_size =  2_147_483_647    #try to do byte allignment for optimisation
 
-
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, buffer_size)
     actual_buffer = sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
@@ -18,28 +17,7 @@ except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
 
 
-
-def get_local_ip():
-    """Get the machine's local IP address"""
-    try:
-        # Create a dummy socket to find which interface would be used
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))  # Doesn't actually send data
-        local_ip = s.getsockname()[0]
-        s.close()
-        return local_ip
-    except Exception as e:
-        print(f"Could not get local IP: {e}")
-        return "127.0.0.1"
-
-# Use it:
-local_ip = get_local_ip()
-addr = (local_ip, 9000)
-
-local_ip = "10.0.0.2"  # Send to namespace IP
-addr = (local_ip, 9000)
-print(f"Sending to: {local_ip}:9000")
-
+addr = ("0.0.0.0", 9000)
 
 duration_seconds = 600
 start_time_ns = time.time_ns()
@@ -49,7 +27,7 @@ seq_num = 1
 
 
 #min packets size of 16 (just the header)
-packet_size = 16                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
+packet_size = 64000                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
 payload = b'x' * (packet_size - 16)      #ASCII x value   (bytes)
 
 #print(time.time())
