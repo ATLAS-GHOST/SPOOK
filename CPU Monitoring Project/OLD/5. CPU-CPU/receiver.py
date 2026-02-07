@@ -23,8 +23,8 @@ except Exception as e:
     print("UDP PORT 9000: CLOSED")    #remove this after done
     sock.close()
 
-sock.bind(("192.168.1.44", 9001))
-print("RECEIVER UDP PORT 9000: LISTENING")
+sock.bind(("0.0.0.0", 9001))
+print("RECEIVER UDP PORT 9001: LISTENING")
 
 
 def find_nic_pcie_path():

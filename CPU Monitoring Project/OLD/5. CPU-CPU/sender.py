@@ -17,7 +17,7 @@ except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
 
 
-addr = ("0.0.0.0", 9000)
+addr = ("192.168.1.88", 9000)
 
 duration_seconds = 600
 start_time_ns = time.time_ns()
