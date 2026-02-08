@@ -77,13 +77,12 @@ _____________________________________________________________________________
 
 27-01-2026
 
-systemctl start docker
-docker rm prometheus grafana
-docker compose up -d
+systemctl start docker && docker rm prometheus grafana && docker compose up -d
+
 docker compose logs -f
 docker start udp_receiver
 
- sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647 
+sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647 
 
 
 udp_receiver  | Socket receive buffer set to: 2,000,000,000 bytes
