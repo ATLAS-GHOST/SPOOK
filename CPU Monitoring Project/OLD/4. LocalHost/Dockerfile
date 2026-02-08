@@ -4,7 +4,7 @@ WORKDIR /udp_testing
 
 COPY . .
 
-RUN pip install --no-cache-dir prometheus_client
+RUN pip install --no-cache-dir prometheus_client psutil
 
 EXPOSE 9000/udp
 EXPOSE 8000

@@ -27,7 +27,7 @@ seq_num = 1
 
 
 #min packets size of 16 (just the header)
-packet_size = 64000                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
+packet_size = 16                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
 payload = b'x' * (packet_size - 16)      #ASCII x value   (bytes)
 
 #print(time.time())
