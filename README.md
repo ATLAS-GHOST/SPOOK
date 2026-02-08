@@ -4,7 +4,7 @@ SPOOK (Systems Performance &amp; Operational Observability Kit) visualises perfo
 Make sure to download docker, node_exporter, promtheus_client
 
 1. Head to DownGit: https://downgit.github.io/#/home
-2. Enter: https://github.com/ATLAS-GHOST/SPOOK/tree/main/CPU Monitoring Project/OLD/4. LocalHost
+2. Enter: https://github.com/ATLAS-GHOST/SPOOK/tree/main/CPU%20Monitoring%20Project/OLD/4.%20LocalHost 
 3. Download & extract files
 4. cd to/path
 5. systemctl start docker
