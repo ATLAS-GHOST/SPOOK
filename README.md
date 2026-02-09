@@ -54,19 +54,23 @@ Run Python-related components inside a virtual environment (`venv`).
 ### 2. Navigate to the Project Directory
 1. cd `to/parent/folder/of/docker/files`
 
+---
+
 ### 3. Starting Docker
 1. Run:
    ```sudo systemctl start docker```
 
+---
+
 ### 4. Launch Grafana & Prometheus
+
 1. Choose one of the following:
-  
-   Unoptimised Grafana Docker
-      ```docker compose up -d```
 
-   Optimised Docker Setup
-      ```docker compose -f docker-compose-optimised.yml up -d```
-   
+   **Unoptimised Grafana Docker**
+   ```docker compose up -d```
+
+   **Optimised Grafana Docker**
+   ```docker compose -f docker-compose-optimised.yml up -d```
+
    If needed, clean up old containers:
-      ```docker rm prometheus grafana```
-
+   ```docker rm prometheus grafana```
