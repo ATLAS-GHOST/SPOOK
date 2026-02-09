@@ -1,29 +1,7 @@
 # SPOOK
-SPOOK (Systems Performance &amp; Operational Observability Kit) visualises performance metrics on the trigger system.  
+**SPOOK (Systems Performance &amp; Operational Observability Kit) visualises performance metrics on the trigger system.**
 
-Make sure to download docker, node_exporter, promtheus_client - run in a venv
-
-1. Head to DownGit: https://downgit.github.io/#/home
-2. Enter: https://github.com/ATLAS-GHOST/SPOOK/tree/main/CPU%20Monitoring%20Project/OLD/4.%20LocalHost
-3. Download & extract files
-4. cd to/path
-5. systemctl start docker
-6. docker compose up -d (unoptimised grafana docker) or docker compose -f docker-compose-optimised.yml up -d (optimised docker)
-7. docker rm prometheus grafana (if needed)
-8. sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647
-9. cd to node_exporter in downloads in new terminal
-10.  then do ./node_exporter
-11.  new terminal
-12.  Run the receiver
-13.  HEad to grafana - http://localhost:3000/login
-14.  Add Prometheus data source - http://localhost:9090 
-15.  COpy grafanaJSON
-16.  Start the sender in seperate terminal
-17.  RUn queries indiviudally
-18.  Breathe a sigh of relief
-
-# SPOOK  
-**Systems Performance & Operational Observability Kit**
+This is the documentation for running the localhost Grafana setup
 
 ## Prerequisites
 
@@ -79,31 +57,27 @@ Run Python-related components inside a virtual environment (`venv`).
 2. run:
    ```./node_exporter```
 
+### 6. (Optional) Increase the network buffer limits
 
-5. Increase Network Buffer Limits
-sudo sysctl -w net.core.wmem_max=2147483647
-sudo sysctl -w net.core.rmem_max=2147483647
-6. Start Node Exporter
-Open a new terminal, then:
-cd /path/to/node_exporter
-./node_exporter
-7. Start the Receiver
-Open another new terminal and run the receiver:
-# command to run receiver
-8. Access Grafana
-Open your browser and go to:
-http://localhost:3000/login
-9. Configure Prometheus Data Source
-In Grafana, add a new Prometheus data source
-Set the URL to:
-http://localhost:9090
-Save & test the connection
-10. Import Dashboard
-Copy the provided grafanaJSON
-Import it into Grafana
-11. Start the Sender
-In a separate terminal, start the sender:
-# command to start sender
-12. Run Queries
-Execute queries individually in Grafana
-Confirm metrics are updating correctly
+1. ```sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647```
+
+### 7. Starting the receiver
+
+1. In a new terminal, run `receiver.py`  
+
+   Note: If you want to increase the buffer size, run instruction #6 and restart `receiver.py`
+
+### 8. Accessing Grafana
+In order to access Grafana, the receiver must be running
+
+1. Open your browser and go to:
+   ```http://localhost:3000/login```
+2. Login and add Prometheus as a data source:
+   ```http://localhost:9090```
+3. Copy and paste the JSON from the directory into Grafana settings
+4. Run each panel query individually
+
+### 9. Starting the sender
+
+1. In a new terminal, run `sender.py`
+
