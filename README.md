@@ -41,11 +41,13 @@ Run Python-related components inside a virtual environment (`venv`).
 1. Choose one of the following:  
 
    **Unoptimised Grafana Docker**  
-   `docker compose up -d`  
+   `docker compose up -d`
+   
       This has no optimisation to Grafana CPU & RAM usage
 
    **Optimised Grafana Docker**  
-   `docker compose -f docker-compose-optimised.yml up -d`  
+   `docker compose -f docker-compose-optimised.yml up -d`
+   
       This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
 
    If needed, clean up old containers:  
