@@ -15,7 +15,6 @@ Before you begin, make sure you have the following installed:
 
 Run Python-related components inside a virtual environment (`venv`).
 
----
 
 ## Setup Instructions
 
