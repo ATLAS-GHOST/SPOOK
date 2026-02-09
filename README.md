@@ -27,7 +27,6 @@ Run Python-related components inside a virtual environment (`venv`).
    ```https://github.com/ATLAS-GHOST/SPOOK/tree/main/CPU%20Monitoring%20Project/OLD/4.%20LocalHost```
 3. Download and extract the files.
 
----
 
 ### 2. Navigate to the Project Directory
 1. cd `to/parent/folder/of/docker/files`
