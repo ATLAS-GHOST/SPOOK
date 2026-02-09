@@ -1,7 +1,7 @@
 # SPOOK
 SPOOK (Systems Performance &amp; Operational Observability Kit) visualises performance metrics on the trigger system.  
 
-Make sure to download docker, node_exporter, promtheus_client
+Make sure to download docker, node_exporter, promtheus_client - run in a venv
 
 1. Head to DownGit: https://downgit.github.io/#/home
 2. Enter: https://github.com/ATLAS-GHOST/SPOOK/tree/main/CPU%20Monitoring%20Project/OLD/4.%20LocalHost
@@ -21,3 +21,29 @@ Make sure to download docker, node_exporter, promtheus_client
 16.  Start the sender in seperate terminal
 17.  RUn queries indiviudally
 18.  Breathe a sigh of relief
+
+# SPOOK  
+**Systems Performance & Operational Observability Kit**
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- Docker
+- Docker Compose
+- Python virtual environment (venv)
+- node_exporter
+- prometheus_client
+
+Run Python-related components inside a virtual environment (`venv`).
+
+---
+
+## Setup Instructions
+
+### 1. Download the Project Files
+
+1. Go to **DownGit**:  
+   https://downgit.github.io/#/home
+2. Paste the following repository path:
+
