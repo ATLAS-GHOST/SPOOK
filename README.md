@@ -43,8 +43,12 @@ Run Python-related components inside a virtual environment (`venv`).
       **Unoptimised Grafana Docker**  
       ```docker compose up -d```
 
+         This has no optimisation to Grafana CPU & RAM usage
+
       **Optimised Grafana Docker**  
       ```docker compose -f docker-compose-optimised.yml up -d```
+
+         This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
 
    If needed, clean up old containers:  
    ```docker rm prometheus grafana```
@@ -54,6 +58,8 @@ Run Python-related components inside a virtual environment (`venv`).
 1. cd `/path/to/node_exporter`
 2. run:
    ```./node_exporter```
+
+   This is required for Grafana's ethernet and NIC packet metrics
 
 ### 6. (Optional) Increase the network buffer limits
 
@@ -78,4 +84,7 @@ In order to access Grafana, the receiver must be running
 ### 9. Starting the sender
 
 1. In a new terminal, run `sender.py`
+
+
+You should now see the Grafana dashboard becoming populated with metrics. Breathe a sigh of relief!
 
