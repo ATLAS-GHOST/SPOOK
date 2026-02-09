@@ -70,5 +70,40 @@ Run Python-related components inside a virtual environment (`venv`).
       **Optimised Grafana Docker**  
       ```docker compose -f docker-compose-optimised.yml up -d```
 
-   If needed, clean up old containers:
+   If needed, clean up old containers:  
    ```docker rm prometheus grafana```
+
+### 5. Launching node_exporter
+
+1. cd `/path/to/node_exporter`
+2. run:
+   ```./node_exporter```
+
+
+5. Increase Network Buffer Limits
+sudo sysctl -w net.core.wmem_max=2147483647
+sudo sysctl -w net.core.rmem_max=2147483647
+6. Start Node Exporter
+Open a new terminal, then:
+cd /path/to/node_exporter
+./node_exporter
+7. Start the Receiver
+Open another new terminal and run the receiver:
+# command to run receiver
+8. Access Grafana
+Open your browser and go to:
+http://localhost:3000/login
+9. Configure Prometheus Data Source
+In Grafana, add a new Prometheus data source
+Set the URL to:
+http://localhost:9090
+Save & test the connection
+10. Import Dashboard
+Copy the provided grafanaJSON
+Import it into Grafana
+11. Start the Sender
+In a separate terminal, start the sender:
+# command to start sender
+12. Run Queries
+Execute queries individually in Grafana
+Confirm metrics are updating correctly
