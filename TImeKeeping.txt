@@ -71,7 +71,7 @@ udp_receiver  | Packets Received: 960601
 udp_receiver  | Packets Lost: 66262
 udp_receiver  | Packets Loss Percentage: 6.4529
 
-WE'RE GETTING SOMEWHERE ALHAMDULILLAH!
+WE'RE GETTING SOMEWHERE!
 
 _____________________________________________________________________________
 
@@ -93,7 +93,7 @@ udp_receiver  | Packets Lost: 0
 udp_receiver  | Packets Loss Percentage: 0.0000
 udp_receiver exited with code 0
 
-ALHAMDULILLAH!
+!
 
 Increased buffer size to max
 USed network host 
@@ -103,9 +103,9 @@ DOcker =  http://localhost:3000     /login
 
 _____________________________________________________________________________
 
-ALHAMDULILLAH I got some pre made metrics to use from prometheus node_exporter
+ I got some pre made metrics to use from prometheus node_exporter
 Tomorrow I will get the pcie and NIC and pid metricss etc including cpu
-ALHAMDULILLAH THe packets i put are already in there
+THe packets i put are already in there
 
 cd to node_exporter in downloads
 then do ./node_exporter
@@ -123,3 +123,10 @@ _____________________________________________________________________________
 Got a namspace to do something
 GOt some eth packets but metrics messed up
 HOw would this link with gpu???
+
+
+_____________________________________________________________________________
+
+13-02-2026
+How to use
+GO to copy dir

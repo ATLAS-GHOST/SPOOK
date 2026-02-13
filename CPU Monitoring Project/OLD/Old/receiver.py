@@ -23,8 +23,8 @@ except Exception as e:
     print("UDP PORT 9000: CLOSED")    #remove this after done
     sock.close()
 
-sock.bind(("0.0.0.0", 9000))
-print("UDP PORT 9000: LISTENING")
+sock.bind(("10.0.0.2", 9000))
+print("UDP PORT 9000: LISTENING on...")
 
 
 def find_nic_pcie_path():
@@ -59,6 +59,8 @@ def read_pcie_stats(pcie_path):
     return stats
 
 
+
+
 packets_received_p = Counter('packets_received_total', 'Total packets received')
 bytes_received_p = Counter('bytes_received_total', 'Total bytes receved')
 packets_lost_p = Counter('packets_lost_total', 'Total packets lost')
@@ -70,9 +72,9 @@ grafana_cpu_usage_p = Gauge('grafana_cpu_usage', 'CPU usage of grafana')
 grafana_mem_p = Gauge('grafana_memory_bytes', 'Grafana memory usage')
 receiver_mem_p = Gauge('receiver_memory_bytes', 'Receiver memory usage')
 
-# grafana_pid = int(subprocess.check_output(
-#     ["docker", "inspect", "--format", "{{.State.Pid}}", "grafana"]
-# ).strip())
+grafana_pid = int(subprocess.check_output(
+    ["docker", "inspect", "--format", "{{.State.Pid}}", "grafana"]
+).strip())
 
 pcie_rx_overflow_p = Gauge('pcie_rx_overflow', 'PCIe buffer overflow')
 
@@ -95,7 +97,7 @@ seq_samples = []
 start_http_server(8000)   #for prometheus
 
 process = psutil.Process()
-#grafana_process = psutil.Process(grafana_pid)
+grafana_process = psutil.Process(grafana_pid)
 
 try:
     while True:
@@ -133,10 +135,10 @@ try:
             # Update Prometheus metrics
             process_cpu_p.set(process_cpu_percent)
             total_cpu_p.set(total_cpu_percent)
-            #grafana_cpu_usage_p.set(grafana_process.cpu_percent(interval=0))
+            grafana_cpu_usage_p.set(grafana_process.cpu_percent(interval=0))
 
             receiver_mem_p.set(process.memory_info().rss)
-            #grafana_mem_p.set(grafana_process.memory_info().rss)
+            grafana_mem_p.set(grafana_process.memory_info().rss)
 
             if pcie_path:
                 stats = read_pcie_stats(pcie_path)
