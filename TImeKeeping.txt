@@ -128,5 +128,6 @@ HOw would this link with gpu???
 _____________________________________________________________________________
 
 13-02-2026
+GOt it into 1 docker container with 1 image. SUccessfully gets metrics from receiver
 How to use
 GO to copy dir
