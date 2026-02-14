@@ -131,3 +131,13 @@ _____________________________________________________________________________
 GOt it into 1 docker container with 1 image. SUccessfully gets metrics from receiver
 How to use
 GO to copy dir
+
+
+_____________________________________________________________________________
+14/02/2026
+
+its working on alpine
+understood about PORTS 
+got grafana working
+
+need to make sure that grafana dashboard can be saved and accessed properly
