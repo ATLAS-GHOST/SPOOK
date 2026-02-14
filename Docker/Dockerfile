@@ -1,9 +1,7 @@
-FROM ubuntu:24.04
-
-ENV DEBIAN_FRONTEND=noninteractive
+FROM alpine:3.19
 
 # Install dependencies
-RUN apt-get update && apt-get install -y wget tar && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache wget tar
 
 # Install Prometheus
 RUN wget https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-amd64.tar.gz && \
@@ -16,12 +14,6 @@ RUN wget https://dl.grafana.com/oss/release/grafana-10.2.2.linux-amd64.tar.gz &&
     tar -zxvf grafana-10.2.2.linux-amd64.tar.gz && \
     mv grafana-v10.2.2 /opt/grafana && \
     rm grafana-10.2.2.linux-amd64.tar.gz
-
-# Install Node Exporter for network metrics
-RUN wget https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz && \
-    tar xvfz node_exporter-1.7.0.linux-amd64.tar.gz && \
-    mv node_exporter-1.7.0.linux-amd64 /opt/node_exporter && \
-    rm node_exporter-1.7.0.linux-amd64.tar.gz
 
 # Create prometheus config directory
 RUN mkdir -p /etc/prometheus
@@ -44,8 +36,6 @@ EOF
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
-
 
 EXPOSE 9090 3000
 ENTRYPOINT ["/entrypoint.sh"]
