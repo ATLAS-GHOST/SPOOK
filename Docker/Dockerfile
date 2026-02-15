@@ -1,27 +1,19 @@
-FROM alpine:3.19
+FROM alpine:3.23.3
 
-# Install dependencies
-RUN apk add --no-cache wget tar
+RUN wget https://github.com/prometheus/prometheus/releases/download/v3.5.1/prometheus-3.5.1.linux-amd64.tar.gz && \
+    tar xvfz prometheus-3.5.1.linux-amd64.tar.gz && \
+    mv prometheus-3.5.1.linux-amd64 /opt/prometheus && \
+    rm prometheus-3.5.1.linux-amd64.tar.gz
 
-# Install Prometheus
-RUN wget https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-amd64.tar.gz && \
-    tar xvfz prometheus-2.48.0.linux-amd64.tar.gz && \
-    mv prometheus-2.48.0.linux-amd64 /opt/prometheus && \
-    rm prometheus-2.48.0.linux-amd64.tar.gz
+RUN wget https://dl.grafana.com/grafana/release/12.3.3/grafana_12.3.3_21957728731_linux_amd64.tar.gz && \
+    tar -zxvf grafana_12.3.3_21957728731_linux_amd64.tar.gz && \
+    mv grafana-12.3.3 /opt/grafana && \
+    rm grafana_12.3.3_21957728731_linux_amd64.tar.gz
 
-# Install Grafana
-RUN wget https://dl.grafana.com/oss/release/grafana-10.2.2.linux-amd64.tar.gz && \
-    tar -zxvf grafana-10.2.2.linux-amd64.tar.gz && \
-    mv grafana-v10.2.2 /opt/grafana && \
-    rm grafana-10.2.2.linux-amd64.tar.gz
-
-# Create prometheus config directory
 RUN mkdir -p /etc/prometheus
 
-# Copy prometheus config (you need to have this file next to Dockerfile)
 COPY prometheus.yml /etc/prometheus/prometheus.yml
 
-# Create Grafana datasource config
 RUN mkdir -p /opt/grafana/conf/provisioning/datasources
 COPY <<EOF /opt/grafana/conf/provisioning/datasources/prometheus.yml
 apiVersion: 1
@@ -33,7 +25,6 @@ datasources:
     isDefault: true
 EOF
 
-# Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
