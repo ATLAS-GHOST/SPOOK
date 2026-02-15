@@ -141,3 +141,10 @@ understood about PORTS
 got grafana working
 
 need to make sure that grafana dashboard can be saved and accessed properly
+
+
+docker build -t monitoring-stack .
+docker run -d -p 9090:9090 -p 3000:3000 --name monitoring monitoring
+
+docker stop monitoring
+docker rm monitoring
