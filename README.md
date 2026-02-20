@@ -39,7 +39,7 @@ and run Python-related components inside a virtual environment (`venv`).
 
 1. Run Grafana Docker:
    
-   `ADD FILE NAME HERE`
+   `ADD FILE NAME HERE` ADD THE -p<GRAF_PORT> and <PROM_PORT>
    
       This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
 
@@ -51,9 +51,9 @@ and run Python-related components inside a virtual environment (`venv`).
 In order to access Grafana:
 
 1. Open your browser and go to:
-   ```http://localhost:3000/login```
+   ```http://localhost:<GRAF_PORT>/login```
 2. Login and add Prometheus as a data source:
-   ```http://localhost:9090```
+   ```http://localhost:<PROM_PORT>```
 3. Copy and paste the JSON from the directory into Grafana settings
 4. Run each panel query individually
 
