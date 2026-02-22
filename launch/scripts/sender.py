@@ -9,6 +9,9 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # HP :    Max buffer size: 425 984
 buffer_size =  2_147_483_647    #try to do byte allignment for optimisation
 
+
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, buffer_size)
     actual_buffer = sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
@@ -17,7 +20,7 @@ except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
 
 
-addr = ("192.168.100.2", 9000)
+addr = ("192.168.1.255", 9000)
 
 duration_seconds = 600
 start_time_ns = time.time_ns()
@@ -27,7 +30,7 @@ seq_num = 1
 
 
 #min packets size of 16 (just the header)
-packet_size = 64000                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
+packet_size = 64                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
 payload = b'x' * (packet_size - 16)      #ASCII x value   (bytes)
 
 #print(time.time())
@@ -43,7 +46,6 @@ try:
 
         sock.sendto(packet, addr)
         seq_num += 1
-        time.sleep(0)
 
             
 except KeyboardInterrupt:

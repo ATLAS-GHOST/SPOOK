@@ -13,6 +13,7 @@ buffer_size = 268435455 * 8  + 7
 
 #socket.SO_RCVBUF absorbs packets when loop cant keep up. When full, kernel drops packets. 
 
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, buffer_size)
@@ -20,10 +21,10 @@ try:
     print(f"Socket receive buffer set to: {actual_buffer:,} bytes")
 except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
-    print("UDP PORT 9000: CLOSED")    
+    print("UDP PORT 9000: CLOSED")    #remove this after done
     sock.close()
 
-sock.bind(("0.0.0.0", 9000))
+sock.bind(("", 9000))
 print("UDP PORT 9000: LISTENING")
 
 
@@ -70,9 +71,9 @@ grafana_cpu_usage_p = Gauge('grafana_cpu_usage', 'CPU usage of grafana')
 grafana_mem_p = Gauge('grafana_memory_bytes', 'Grafana memory usage')
 receiver_mem_p = Gauge('receiver_memory_bytes', 'Receiver memory usage')
 
-# grafana_pid = int(subprocess.check_output(
-#     ["docker", "inspect", "--format", "{{.State.Pid}}", "grafana"]
-# ).strip())
+grafana_pid = int(subprocess.check_output(
+    ["docker", "inspect", "--format", "{{.State.Pid}}", "grafana"]
+).strip())
 
 pcie_rx_overflow_p = Gauge('pcie_rx_overflow', 'PCIe buffer overflow')
 

@@ -15,19 +15,17 @@ RUN mkdir -p /etc/prometheus
 COPY prometheus.yml /etc/prometheus/prometheus.yml
 
 RUN mkdir -p /opt/grafana/conf/provisioning/datasources
-COPY <<EOF /opt/grafana/conf/provisioning/datasources/prometheus.yml
-apiVersion: 1
-datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    url: http://localhost:9090
-    isDefault: true
-EOF
+COPY datasources.yml /opt/grafana/conf/provisioning/datasources/prometheus.yml
+
+
+RUN mkdir -p /opt/grafana/conf/provisioning/dashboards
+COPY dashboards.yml /opt/grafana/conf/provisioning/dashboards/dashboards.yml
+COPY dashboard.json /opt/grafana/conf/provisioning/dashboards/dashboard.json    
+
+
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 9090 3000
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sleep", "infinity"]
