@@ -1,16 +1,12 @@
 import socket
 import time
 import struct
-from prometheus_client import start_http_server, Counter, Gauge, Histogram
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# Huawei: Max buffer size: (2,147,483,647 bytes = 268435455 * 8  + 7)
-# HP :    Max buffer size: 425 984
-buffer_size =  2_147_483_647    #try to do byte allignment for optimisation
+buffer_size =  2_147_483_647 
 
-
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+target_ip = input("Enter target IP address in the format ex. 192.168.1.x : ").strip()
 
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, buffer_size)
@@ -19,8 +15,7 @@ try:
 except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
 
-
-addr = ("192.168.1.255", 9000)
+addr = (target_ip, 9000)
 
 duration_seconds = 600
 start_time_ns = time.time_ns()
