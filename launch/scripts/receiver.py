@@ -13,7 +13,7 @@ buffer_size = 268435455 * 8  + 7
 
 #socket.SO_RCVBUF absorbs packets when loop cant keep up. When full, kernel drops packets. 
 
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, buffer_size)
@@ -82,7 +82,7 @@ pcie_rx_overflow_p = Gauge('pcie_rx_overflow', 'PCIe buffer overflow')
 count = 0
 packets_received_last_sample = 0
 
-expected_seq = 0
+expected_seq = 1
 packets_lost = 0
 packets_out_of_order = 0    #no packets out of order
 
@@ -109,15 +109,22 @@ try:
             print(f"Packets Lost: {packets_lost}")
             print(f"Packets Loss Percentage: {packets_lost_percent:.4f}")
             break
-        
-        expected_seq += 1  #count
 
         seq = struct.unpack('!Q', data[:8])[0]
+        #print(f'expected: {expected_seq}, seq: {seq}')
         sender_timestamp_ns = struct.unpack('!Q', data[8:16])[0]
-        if expected_seq != seq:
+
+        if expected_seq == seq:
+            expected_seq += 1
+
+        elif expected_seq < seq:
             packets_lost += (seq - expected_seq)
             packets_lost_p.inc(seq - expected_seq)
-            expected_seq = seq  
+            expected_seq += packets_lost 
+
+        elif expected_seq > seq:
+            packets_out_of_order += 1 
+
         
         count += 1
         packets_received_p.inc()
@@ -125,6 +132,7 @@ try:
         latency_p.observe((time.time_ns() - sender_timestamp_ns)/1_000_000)
 
         if count % 10000 == 0:
+            
             # Get process CPU usage (percentage of one CPU core)
             process_cpu_percent = process.cpu_percent(interval=0)
             
