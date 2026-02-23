@@ -6,7 +6,7 @@ import struct
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 buffer_size =  2_147_483_647 
 
-target_ip = input("Enter target IP address in the format ex. 192.168.1.x : ").strip()
+#target_ip = input("Enter target IP address in the format ex. 192.168.1.x : ").strip()
 
 try:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, buffer_size)
@@ -15,7 +15,7 @@ try:
 except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
 
-addr = (target_ip, 9000)
+addr = ("192.168.1.44", 9000)
 
 duration_seconds = 600
 start_time_ns = time.time_ns()
@@ -25,12 +25,10 @@ seq_num = 1
 
 
 #min packets size of 16 (just the header)
-packet_size = 64                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
+packet_size = 1400                      #bytes   (max for me was: 8 * 8188 = 65504 bytes. UDP MAX = 65507 payload)
 payload = b'x' * (packet_size - 16)      #ASCII x value   (bytes)
 
 #print(time.time())
-
-
 
 try:
     while time.time_ns() < end_time_ns:
@@ -48,7 +46,8 @@ except KeyboardInterrupt:
 
 finally:
     time.sleep(1)
-    sock.sendto(b'STOP', addr)
+    for i in range(0,100):
+        sock.sendto(b'STOP', addr)
     sock.close()
     time_elapsed_ns = time.time_ns() - start_time_ns
     pps = seq_num / (time_elapsed_ns * 10**-9)
@@ -59,6 +58,3 @@ finally:
     print(f"PPS: {pps:.2f}")
     print(f"MBPS: {mbps:.2f}")
     print(f"Packet Size: {packet_size:.2f}")
-
-
-
