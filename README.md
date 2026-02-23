@@ -21,22 +21,15 @@ and run Python-related components inside a virtual environment (`venv`).
 
 1. run `git clone https://github.com/ATLAS-GHOST/SPOOK.git`
 
-
-
 ### 2. Navigate to the Project Directory
-1. cd `to/SPOOK/docker/`
-
+1. run `cd docker`
 
 ### 3. Starting Docker
-1. Run:
-   ```sudo systemctl start docker```
-
+1. run `sudo systemctl start docker`
 
 ### 4. Launch Grafana & Prometheus
 
-1. Run Grafana Docker:
-   
-   `ADD FILE NAME HERE` ADD THE -p<GRAF_PORT> and <PROM_PORT>
+1. Run Grafana & Prometheus Docker with `docker run -d -p 9090:9090 -p 3000:3000 --name monitoring monitoring-stack sleep infinity`
    
       This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
 
@@ -48,17 +41,13 @@ and run Python-related components inside a virtual environment (`venv`).
 In order to access Grafana:
 
 1. Open your browser and go to:
-   ```http://localhost:<GRAF_PORT>/login```
-2. Login and add Prometheus as a data source:
-   ```http://localhost:<PROM_PORT>```
-3. Copy and paste the JSON from the directory into Grafana settings
-4. Run each panel query individually
+   ```http://localhost:3000/login```
+2. You must check what ethernet label your device uses
 
 ### 6. Launching node_exporter
 
 1. cd `/path/to/node_exporter`
-2. run:
-   ```./node_exporter```
+2. run `./node_exporter`
 
    This is required for Grafana's ethernet and NIC packet metrics
 
@@ -68,14 +57,15 @@ In order to access Grafana:
 
 ### 8. Starting the receiver
 
-1. cd `to/SPOOK/launch/scripts/`
-In a new terminal, run `receiver.py`  
+1. In a new terminal, cd `SPOOK/launch/scripts/`
+2. run `receiver.py`  
 
    Note: If you want to increase the buffer size, run instruction #6 and restart `receiver.py`
 
 ### 9. Starting the sender
 
-1. cd `to/SPOOK/launch/scripts/` in a new terminal, then run `sender.py`
+1. In a new terminal, cd `SPOOK/launch/scripts/`
+2. run `sender.py`
 
 
 You should now see the Grafana dashboard becoming populated with metrics.
