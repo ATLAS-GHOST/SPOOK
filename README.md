@@ -70,4 +70,3 @@ In order to access Grafana:
 
 
 You should now see the Grafana dashboard becoming populated with metrics.
-
