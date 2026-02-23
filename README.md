@@ -42,7 +42,8 @@ In order to access Grafana:
 
 1. Open your browser and go to:
    ```http://localhost:3000/login```
-2. You must check what ethernet label your device uses
+2. The dashboard is premade, just navigate to it
+3. You must check what ethernet label your device uses and fix the PromQL accordingly
 
 ### 6. Launching node_exporter
 
