@@ -21,11 +21,11 @@ and run Python-related components inside a virtual environment (`venv`).
 
 1. run `git clone https://github.com/ATLAS-GHOST/SPOOK.git`
 
-### 2. Navigate to the Project Directory
-1. run `cd docker`
+### 2. Navigate to the Docker Directory
+1. `cd docker`
 
 ### 3. Starting Docker
-1. run `sudo systemctl start docker`
+1. `sudo systemctl start docker`
 
 ### 4. Launch Grafana & Prometheus
 
