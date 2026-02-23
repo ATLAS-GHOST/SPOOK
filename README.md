@@ -19,7 +19,7 @@ and run Python-related components inside a virtual environment (`venv`).
 
 ### 1. Download the Project Files
 
-1. run 'git clone https://github.com/ATLAS-GHOST/SPOOK.git'
+1. run `git clone https://github.com/ATLAS-GHOST/SPOOK.git`
 
 
 
