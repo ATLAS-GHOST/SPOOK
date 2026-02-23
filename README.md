@@ -19,11 +19,8 @@ and run Python-related components inside a virtual environment (`venv`).
 
 ### 1. Download the Project Files
 
-1. Go to **DownGit**:  
-   ```https://downgit.github.io/#/home```
-2. Paste the following repository path:  
-   ```ADD PATH HERE```
-3. Download and extract the files.
+1. run 'git clone https://github.com/ATLAS-GHOST/SPOOK.git'
+
 
 
 ### 2. Navigate to the Project Directory
