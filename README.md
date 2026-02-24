@@ -53,28 +53,33 @@ This image is based on Alpine Linux, and is `HOW MANY MB IS IT? HOW MUCH CPU AND
    c. `dashboard.yml` creates the directory to store the dashboards in Docker 
    
    d. `dashboard.json` stores the JSON for the premade dashboard, which will automatically load up on start
+
+Then, the entrypoint script is copied over, which will allow Docker to run Prometheus and Grafana in the background, and listen to ports 9090 & 3000 respectively. The script also ends in "$@" which replaces the shell with any commands given with `docker run`
    
-After we have built our Docker image, we can run the image using:
+After we have built our Docker image, we can run the image. Grafana and Prometheus are in one image to reduce the complexity of the system, and to reduce the network travel of packets between two hypothetical, seperate images. Run it in the terminal with:
 
-4. `docker run -d -p 9090:9090 -p 3000:3000 --name monitoring monitoring-stack sleep infinity`
+4. ```docker run -d \
+   -p 9090:9090 -p 3000:3000 \
+   --name monitoring \
+   --cpus="1.0" \
+   --memory="1024m" \
+   monitoring-stack \
+   sleep infinity```
 
-Grafana and Prometheus are in one image to reduce the complexity of the system, and to reduce the network travel of packets between two hypothetical, seperate images. This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), assigns a local Prometheus & Grafana ports of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: 
+This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names is `monitoring` and assigns a local Prometheus & Grafana ports of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures the program does not exit after the final command has been completed
 
-   `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000'
+If needed, clean up old containers which may have similar names:  
+   ```docker rm prometheus grafana monitoring```
+
+Now, it is important you launch node_exporter, which allows for ethernet and NIC packet metrics visualisation in Grafana. In order to start node_exporter after downloading it:
+
+5. `cd /path/to/node_exporter`
    
-      This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
+In order to access Grafana via the web UI:
 
-   If needed, clean up old containers:  
-   ```docker rm prometheus grafana```
-
-
-### 5. Accessing Grafana
-In order to access Grafana:
-
-1. Open your browser and go to:
-   ```http://localhost:3000/login```
-2. The dashboard is premade, just navigate to it
-3. You must check what ethernet label your device uses and fix the PromQL accordingly
+5. Open your browser and go to: `http://localhost:3000/login`
+   
+There, you should login using admin/admin and optionally change your login details. Please wait up to 5 minutes for the URL to work. Once logged in, the SPOOK dashboard is premade, just navigate to it. When looking at the panels, you must check what ethernet label your device uses and fix the PromQL accordingly for some of the panels. The default is set to 'eno1', but it varies with different devices. 
 
 ### 6. Launching node_exporter
 
