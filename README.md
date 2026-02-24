@@ -5,31 +5,62 @@ This is the documentation for running the localhost and ethernet Grafana setup
 
 ## Prerequisites
 
-Before you begin, make sure you have the following installed:
+Before you begin, make sure you have the following:
 
+- A device running Linux with sudo permissions
 - Docker
 - Python virtual environment (venv)
 - node_exporter
 - prometheus_client
+- Ports 8000 & 9100 free for receiver.py and node_exporter respectively
 
 and run Python-related components inside a virtual environment (`venv`).
+
+1. To run ethernet testing, you must have 2 machines available on the same network. The host machine runs the Docker container, and the receiver.py file. The second machine runs sender.py. You will need to add the IP of the host machine when prompted on the sender.py file. Data is sent via the network stack using UDP.
+2. To run loopback testing, keep both files on the same machine, as well as the Docker container. Data does not travel through the wire in this testing.
 
 
 ## Setup Instructions
 
-### 1. Download the Project Files
+### 1. Clone the Project Files
 
-1. run `git clone https://github.com/ATLAS-GHOST/SPOOK.git`
+In order to get the repository that containes all the file we need, run:
 
-### 2. Navigate to the Docker Directory
+1. `git clone https://github.com/ATLAS-GHOST/SPOOK.git`
+
+This will get the Docker folder, which containss the Dockerfile to launch Grafana & Prometheus via the entrypoint shell script. It will also get the launch files, which contain the receiver.py and sender.py, ready for packet testing. 
+
+### 2. Launching Grafana
+
+Navigate to the Docker directory using:
+
 1. `cd docker`
 
-### 3. Starting Docker
-1. `sudo systemctl start docker`
+And start Docker using: 
 
-### 4. Launch Grafana & Prometheus
+2. `sudo systemctl start docker`
 
-1. Run Grafana & Prometheus Docker with `docker run -d -p 9090:9090 -p 3000:3000 --name monitoring monitoring-stack sleep infinity`
+Once Docker is running, we can build our image. The image is called monitoring-stack, and uses the current directory as the build context. Do this using:
+
+3. `docker build -t monitoring-stack .`
+
+This image is based on Alpine Linux, and is `HOW MANY MB IS IT? HOW MUCH CPU AND RAM DOES IT USE?`. Then,Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
+
+   a. `prometheus.yml` provides the 3 endpoints for Prometheus to scrape. These are 'prometheus', 'udp_receiver' and 'node'. 'udp_receiver' is the receiver.py file running on the host system, and 'node' is the node_exporter endpoint, which gives valuable NIC metrics used in Grafana. Both use the Linux default Docker bridge gateway '172.17.0.1' and are connected to ports 8000 and 9100 respectively. `FUNCTIONAILITY TO CHOOSE WHICH PORT?`
+
+   b. `datasources.yml` ensures that the Promethes datasource is already configured in the Grafana dashboard, making it the default datasource. It also ensures the UID of prometheus is consitent.
+
+   c. `dashboard.yml` creates the directory to store the dashboards in Docker 
+   
+   d. `dashboard.json` stores the JSON for the premade dashboard, which will automatically load up on start
+   
+After we have built our Docker image, we can run the image using:
+
+4. `docker run -d -p 9090:9090 -p 3000:3000 --name monitoring monitoring-stack sleep infinity`
+
+Grafana and Prometheus are in one image to reduce the complexity of the system, and to reduce the network travel of packets between two hypothetical, seperate images. This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), assigns a local Prometheus & Grafana ports of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: 
+
+   `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000'
    
       This limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM 
 
@@ -70,3 +101,8 @@ In order to access Grafana:
 
 
 You should now see the Grafana dashboard becoming populated with metrics.
+
+
+
+docker stop monitoring
+docker rm monitoring
