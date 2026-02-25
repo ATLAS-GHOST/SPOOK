@@ -71,43 +71,43 @@ This command runs the `monitoring-stack` image in detached mode (using -d, which
 If needed, clean up old containers which may have similar names:  
    ```docker rm prometheus grafana monitoring```
 
+### 8. Starting node_exporter
+
 Now, it is important you launch node_exporter, which allows for ethernet and NIC packet metrics visualisation in Grafana. In order to start node_exporter after downloading it:
 
-5. `cd /path/to/node_exporter`
-   
+5. `cd /path/to/node_exporter` and then `./node_exporter` in a new terminal.
+
+This will now send metrics to `http://localhost:9100/` and can be accessed there
+
+### 8. Accessing Grafana via web UI 
+
 In order to access Grafana via the web UI:
 
-5. Open your browser and go to: `http://localhost:3000/login`
+6. Open your browser and go to: `http://localhost:3000/login`
    
 There, you should login using admin/admin and optionally change your login details. Please wait up to 5 minutes for the URL to work. Once logged in, the SPOOK dashboard is premade, just navigate to it. When looking at the panels, you must check what ethernet label your device uses and fix the PromQL accordingly for some of the panels. The default is set to 'eno1', but it varies with different devices. 
 
-### 6. Launching node_exporter
+It is optimal to increase the buffer limits on the sender and host machines to reduce the number of packets dropped due to overflow. You can do this by running in a new terminal:
 
-1. cd `/path/to/node_exporter`
-2. run `./node_exporter`
+7. `sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647`
 
-   This is required for Grafana's ethernet and NIC packet metrics
-
-### 7. (Optional) Increase the network buffer limits
-
-1. ```sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647```
+Ideally, this should be run on the host and the sender machines. You can change the maximum number to your pleasing, but the default set here is 2GB.
 
 ### 8. Starting the receiver
 
-1. In a new terminal, cd `SPOOK/launch/scripts/`
-2. run `receiver.py`  
+To start the receiver: 
+1. In a new terminal, cd `SPOOK/launch/scripts/` and run `receiver.py`  
 
-   Note: If you want to increase the buffer size, run instruction #6 and restart `receiver.py`
+If you want to increase the buffer size, run instruction #7 and restart `receiver.py`
 
 ### 9. Starting the sender
 
-1. In a new terminal, cd `SPOOK/launch/scripts/`
-2. run `sender.py`
+1. In a new terminal, cd `SPOOK/launch/scripts/`and run `sender.py`
 
+You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet. 
 
-You should now see the Grafana dashboard becoming populated with metrics.
+### 9. Stopping the Docker container
 
+To stop the container and its images, run:
 
-
-docker stop monitoring
-docker rm monitoring
+1. docker stop monitoring && docker rm monitoring
