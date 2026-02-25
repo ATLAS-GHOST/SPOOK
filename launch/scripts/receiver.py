@@ -60,6 +60,18 @@ def read_pcie_stats(pcie_path):
     return stats
 
 
+def get_container_stats(process):
+    try:
+        children = process.children(recursive=True)
+        all_procs = [process] + children
+        
+        cpu = sum(p.cpu_percent(interval=0) for p in all_procs)
+        mem = sum(p.memory_info().rss for p in all_procs)
+        return cpu, mem
+    except psutil.NoSuchProcess:
+        return 0, 0
+
+
 packets_received_p = Counter('packets_received_total', 'Total packets received')
 bytes_received_p = Counter('bytes_received_total', 'Total bytes receved')
 packets_lost_p = Counter('packets_lost_total', 'Total packets lost')
@@ -72,8 +84,9 @@ grafana_mem_p = Gauge('grafana_memory_bytes', 'Grafana memory usage')
 receiver_mem_p = Gauge('receiver_memory_bytes', 'Receiver memory usage')
 
 grafana_pid = int(subprocess.check_output(
-    ["docker", "inspect", "--format", "{{.State.Pid}}", "grafana"]
+    ["docker", "inspect", "--format", "{{.State.Pid}}", "monitoring"]
 ).strip())
+
 
 pcie_rx_overflow_p = Gauge('pcie_rx_overflow', 'PCIe buffer overflow')
 
@@ -96,7 +109,13 @@ seq_samples = []
 start_http_server(8000)   #for prometheus
 
 process = psutil.Process()
-#grafana_process = psutil.Process(grafana_pid)
+grafana_process = psutil.Process(grafana_pid)
+
+
+grafana_process = psutil.Process(grafana_pid)
+grafana_process.cpu_percent(interval=0)
+for c in grafana_process.children(recursive=True):
+    c.cpu_percent(interval=0)  # prime all children too
 
 try:
     while True:
@@ -131,7 +150,8 @@ try:
         bytes_received_p.inc(len(data))
         latency_p.observe((time.time_ns() - sender_timestamp_ns)/1_000_000)
 
-        if count % 10000 == 0:
+        if count % 1000 == 0:
+            print()
             
             # Get process CPU usage (percentage of one CPU core)
             process_cpu_percent = process.cpu_percent(interval=0)
@@ -142,10 +162,13 @@ try:
             # Update Prometheus metrics
             process_cpu_p.set(process_cpu_percent)
             total_cpu_p.set(total_cpu_percent)
-            #grafana_cpu_usage_p.set(grafana_process.cpu_percent(interval=0))
 
             receiver_mem_p.set(process.memory_info().rss)
-            #grafana_mem_p.set(grafana_process.memory_info().rss)
+
+
+            cpu, mem = get_container_stats(grafana_process)
+            grafana_cpu_usage_p.set(cpu)
+            grafana_mem_p.set(mem)
 
             if pcie_path:
                 stats = read_pcie_stats(pcie_path)

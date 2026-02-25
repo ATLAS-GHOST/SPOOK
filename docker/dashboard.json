@@ -119,7 +119,7 @@
       "pluginVersion": "12.3.3",
       "targets": [
         {
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "grafana_cpu_usage",
           "legendFormat": "Grafana CPU Usage",
           "range": true,
@@ -130,7 +130,7 @@
             "type": "prometheus",
             "uid": "prometheus-uid"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "process_cpu_usage",
           "hide": false,
           "instant": false,
@@ -1238,8 +1238,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 8,
+        "h": 8,
+        "w": 10,
         "x": 8,
         "y": 26
       },
@@ -1262,7 +1262,7 @@
         {
           "editorMode": "code",
           "expr": "histogram_quantile(0.55, rate(latency_ms_bucket[10s]))",
-          "legendFormat": "__auto",
+          "legendFormat": "55%",
           "range": true,
           "refId": "A"
         },
@@ -1275,7 +1275,7 @@
           "expr": "histogram_quantile(0.95, rate(latency_ms_bucket[10s]))\n",
           "hide": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "95%",
           "range": true,
           "refId": "B"
         },
@@ -1288,9 +1288,22 @@
           "expr": "histogram_quantile(0.99, rate(latency_ms_bucket[10s]))",
           "hide": false,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "99%",
           "range": true,
           "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-uid"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.999, rate(latency_ms_bucket[10s]))",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "D"
         }
       ],
       "title": "Latency ",
