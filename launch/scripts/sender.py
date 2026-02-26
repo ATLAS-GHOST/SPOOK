@@ -62,7 +62,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="UDP Sender")
   parser.add_argument("--target-ip", default="0.0.0.0", help="Local network target IP address ex. 192.168.1.x")
   parser.add_argument("--buffer", type=int, default=2_147_483_647, help="Sender OS buffer size in bytes")
-  parser.add_argument("--duration", type=int, default=10, help="How long to send the packets for in seconds")
+  parser.add_argument("--duration", type=int, default=60, help="How long to send the packets for in seconds")
   parser.add_argument("--packet-size", type=int, default=1400, help="Packet size in bytes")
 
   args = parser.parse_args()
