@@ -15,7 +15,7 @@ Before you begin, make sure you have the following:
 - Ports 8000 & 9100 free for receiver.py and node_exporter respectively for Prometheus scraping
      (If you want to change the ports, please do so manually in `prometheus.yml` for port 8000 and 9100 & `receiver.py` for port 8000 
 
-and run Python-related components inside a virtual environment (`venv`).
+Please run Python-related components inside a virtual environment (`venv`).
 
 1. To run ethernet testing, you must have 2 machines available on the same network. The host machine runs the Docker container, and the receiver.py file. The second machine runs sender.py. You will need to add the IP of the host machine when prompted on the sender.py file. Data is sent via the network stack using UDP.
 2. To run loopback testing, keep both files on the same machine, as well as the Docker container. Data does not travel through the wire in this testing.
@@ -59,13 +59,15 @@ Then, the entrypoint script is copied over, which will allow Docker to run Prome
    
 After we have built our Docker image, we can run the image. Grafana and Prometheus are in one image to reduce the complexity of the system, and to reduce the network travel of packets between two hypothetical, seperate images. Run it in the terminal with:
 
-4. ```docker run -d \
+4. ```
+   docker run -d \
    -p 9090:9090 -p 3000:3000 \
    --name monitoring \
    --cpus="1.0" \
    --memory="1024m" \
    monitoring-stack \
-   sleep infinity```
+   sleep infinity
+   ```
 
 This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names is `monitoring` and assigns a local Prometheus & Grafana ports of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures the program does not exit after the final command has been completed
 
