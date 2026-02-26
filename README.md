@@ -12,7 +12,8 @@ Before you begin, make sure you have the following:
 - Python virtual environment (venv)
 - node_exporter
 - prometheus_client
-- Ports 8000 & 9100 free for receiver.py and node_exporter respectively
+- Ports 8000 & 9100 free for receiver.py and node_exporter respectively for Prometheus scraping
+     (If you want to change the ports, please do so manually in `prometheus.yml` for port 8000 and 9100 & `receiver.py` for port 8000 
 
 and run Python-related components inside a virtual environment (`venv`).
 
