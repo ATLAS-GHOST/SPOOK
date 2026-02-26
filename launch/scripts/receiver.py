@@ -21,7 +21,6 @@ try:
     print(f"Socket receive buffer set to: {actual_buffer:,} bytes")
 except Exception as e:
     print(f"Warning: Could not set buffer size: {e}")
-    print("UDP PORT 9000: CLOSED")    #remove this after done
     sock.close()
 
 sock.bind(("0.0.0.0", 9000))
