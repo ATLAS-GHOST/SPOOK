@@ -99,13 +99,20 @@ Ideally, this should be run on the host and the sender machines. You can change 
 ### 8. Starting the receiver
 
 To start the receiver: 
-1. In a new terminal, cd `SPOOK/launch/scripts/` and run `receiver.py`  
+8. In a new terminal, cd `SPOOK/launch/scripts/` and run `receiver.py`  
 
 If you want to increase the buffer size, run instruction #7 and restart `receiver.py`
 
 ### 9. Starting the sender
 
-1. In a new terminal, cd `SPOOK/launch/scripts/`and run `sender.py`
+9. In a new terminal, cd `SPOOK/launch/scripts/`and run the script. An example input for the sender is `python sender.py --target-ip 127.0.0.1 --buffer 4000 --duration 10 --packet-size 16`, where: 
+   a. `--target-ip` is the IP address of the machine which hosts the Prometheus and Grafana Docker. If not typed out, it will default to local host "0.0.0.0". Format it without quotation marks.
+        Example: `--target-ip 192.168.2.xx` or `` to default to localhost
+   b. `--buffer` is the size of the OS send buffer in bytes. By increasing it, more packets can be sent per second with reduced latency. If set too low, packets will back-up in the buffer and will be sent once the buffer drains. Any incoming packets on a full buffer will be dropped due to the UDP. It defaults to 2_147_483_647 bytes, but it depends on the OS restrictions in place, as some OS will cap max buffer sizes.
+        Example: `--buffer 640000000` or `` for default
+   c. `--duration` is for how long the sender should send the UDP packets. It defaults to 60 seconds.
+        Example: `--duration 600` for 10 minutes or `` for 60 seconds.
+   d. `--packet_size` is how big the UDP packets are. This has a minimum value of 16 bytes, to a maximum 
 
 You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet. 
 
@@ -113,4 +120,4 @@ You should now see the Grafana dashboard becoming populated with metrics on the 
 
 To stop the container and its images, run:
 
-1. docker stop monitoring && docker rm monitoring
+10. docker stop monitoring && docker rm monitoring
