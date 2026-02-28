@@ -128,15 +128,23 @@ The sender sends UDP packets at max rate from the sender machine. It continualy 
     
      Example: `--packet-size 1600` or ` ` for default
 
-You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet. 
+You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet  
 
-### 7. Verifying application health
+### 7. Verifying application health & Useful links
 
+To verify:
 
-### 8. Troubleshooting problems
+  1. Docker - Run `Docker ps` and `monitoring` should be running, or the name you gave when running it. You should also see that the ports are mapped properly
+     
+  2. Grafana Web - Open `http://localhost:3000`. If Grafana UI appears, then it is running well
+     
+  2. Prometheus - Open `http://localhost:9090/targets`. There, you should see 3 targets; udp_receiver, prometheus & node. All 3 should be showing as UP
+     
+  3. node_exporter - Open `http://localhost:9100/metrics`. You should see the metrics exposed by node_exporter there.
+     
+  4. receiver.py endpoints - Open `http://localhost:8000/metrics`. You should see the metrics exposed by the receiver there
 
-
-### 7. Stopping the Docker container
+### 8. Stopping the Docker container
 
 To stop the container and its images, run:
 
