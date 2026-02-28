@@ -48,7 +48,7 @@ Once Docker is running, we can build our image. The image is called monitoring-s
 
 This image is based on Alpine Linux, and is `HOW MANY MB IS IT? HOW MUCH CPU AND RAM DOES IT USE?`. Then, Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
 
-   a. `prometheus.yml` provides the 3 endpoints for Prometheus to scrape. These are 'prometheus', 'udp_receiver' and 'node'. 'udp_receiver' is the receiver.py file running on the host system, and 'node' is the node_exporter endpoint, which gives NIC metrics used in Grafana. Both use the Linux default Docker bridge gateway '172.17.0.1' and are connected to ports 8000 and 9100 respectively. These ports are seperate from the host ports, so it is best to not change them here.
+   a. `prometheus.yml` provides the 3 endpoints for Prometheus to scrape. These are 'prometheus', 'udp_receiver' and 'node'. 'udp_receiver' is the receiver.py file running on the host system, and 'node' is the node_exporter endpoint, which gives NIC metrics used in Grafana. Both use the Linux default Docker bridge gateway '172.17.0.1' and are connected to ports 8000 and 9100 respectively. These ports are seperate from the host ports, so it is best to not change them here. You may have to change the bridge gateway IP if '172.12.0.1' is not the default for your device.
 
    b. `datasources.yml` ensures that the Promethes datasource is already configured in the Grafana dashboard, while making it the default datasource. It also ensures the UID of prometheus is consitent, allowing the panels to show correctly.
 
@@ -71,10 +71,10 @@ After we have built our Docker image, we can run the image. Grafana and Promethe
    sleep infinity
    ```
 
-This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names it `monitoring` and assigns a local Prometheus & Grafana ports of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures the program does not exit after the final command has been completed
+This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names it `monitoring` and maps host ports for Prometheus & Grafana of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures PID #1 stays alive after entrypoint.sh finishes.  
 
 5. If needed, clean up old containers which may have similar names:  
-   ```docker rm prometheus grafana monitoring```
+   ```docker rm monitoring```
 
 ### 3. Starting node_exporter
 
@@ -96,11 +96,11 @@ It is optimal to increase the buffer limits on the sender and host machines to r
 
 2. `sudo sysctl -w net.core.wmem_max=2147483647 && sudo sysctl -w net.core.rmem_max=2147483647`
 
-Ideally, this should be run both on the host and the sender machines. You can change the maximum number to your pleasing, but the default set here is 2GB.
+Ideally, this should be run both on the host and the sender machines. You can change the maximum number to your pleasing, but the default set here is 2.1GB.
 
 ### 5. Starting the receiver
 
-The receiver takes UDP packets as input and exposes metrics for Prometheus to scrape. 
+The receiver takes UDP packets as input and exposes metrics for Prometheus to scrape. By default, the receiver will use 2.1 GB of OS buffer. You can change this isn the source file of the receiver, however, chances of packets loss increases in this case. 
 
 To start the receiver: 
 1. In a new terminal, cd `SPOOK/launch/scripts/` and run `receiver.py`  
@@ -112,7 +112,7 @@ If you want to increase the buffer size, run instruction #7 and restart `receive
 The sender sends UDP packets at max rate from the sender machine. It continualy sends packets of the same size to the target IP specified by the user. 
 
 1. In a new terminal, cd `SPOOK/launch/scripts/`and run the script. An example input for the sender is ```python sender.py --target-ip 127.0.0.1 --buffer 4000 --duration 10 --packet-size 16```, where: 
-   a. `--target-ip` is the IP address of the machine which hosts the Prometheus and Grafana Docker. If not typed out, it will default to local host "0.0.0.0". Format it without quotation marks.
+   a. `--target-ip` is the IP address of the machine which hosts the Prometheus and Grafana Docker. If not typed out, it will default to local host "127.0.0.1". Format it without quotation marks.
    
      Example: `--target-ip 192.168.2.xx` or ` ` to default to localhost
     
@@ -129,6 +129,12 @@ The sender sends UDP packets at max rate from the sender machine. It continualy 
      Example: `--packet-size 1600` or ` ` for default
 
 You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet. 
+
+### 7. Verifying application health
+
+
+### 8. Troubleshooting problems
+
 
 ### 7. Stopping the Docker container
 
