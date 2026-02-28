@@ -98,12 +98,16 @@ Ideally, this should be run on the host and the sender machines. You can change 
 
 ### 8. Starting the receiver
 
+The receiver takes UDP packets as input and exposes metrics for Prometheus to scrape. 
+
 To start the receiver: 
 8. In a new terminal, cd `SPOOK/launch/scripts/` and run `receiver.py`  
 
 If you want to increase the buffer size, run instruction #7 and restart `receiver.py`
 
 ### 9. Starting the sender
+
+The sender sends UDP packets at max rate from the sender machine. It continualy sends packets of the same size to the target IP specified by the user. 
 
 9. In a new terminal, cd `SPOOK/launch/scripts/`and run the script. An example input for the sender is `python sender.py --target-ip 127.0.0.1 --buffer 4000 --duration 10 --packet-size 16`, where: 
    a. `--target-ip` is the IP address of the machine which hosts the Prometheus and Grafana Docker. If not typed out, it will default to local host "0.0.0.0". Format it without quotation marks.  
@@ -115,7 +119,8 @@ If you want to increase the buffer size, run instruction #7 and restart `receive
    c. `--duration` is for how long the sender should send the UDP packets. It defaults to 60 seconds.  
      Example: `--duration 600` for 10 minutes or ` ` for 60 seconds.
    
-   d. `--packet_size` is how big the UDP packets are. This has a minimum value of 16 bytes, to a maximum  
+   d. `--packet_size` is how big the UDP packets are. This has a minimum value of 16 bytes, to a maximum of 64,000 bytes which is the UDP limit  
+     Example: `--packet-size 1600` or ` ` for default
 
 You should now see the Grafana dashboard becoming populated with metrics on the URL `http://localhost:3000/`. If any metrics are broken, please ensure the the PromQL is targeting the correct metric, especially ethernet. 
 
