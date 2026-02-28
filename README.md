@@ -60,7 +60,7 @@ Then, the entrypoint script is copied over, which will allow Docker to run Prome
    
 After we have built our Docker image, we can run the image. Grafana and Prometheus are in one image to reduce the complexity of the system, and to reduce the network travel of packets between two hypothetical, seperate images. Run it in the terminal with:
 
-4.
+4.  
    ```
    docker run -d \
    -p 9090:9090 -p 3000:3000 \
