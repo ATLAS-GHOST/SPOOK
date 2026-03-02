@@ -5,9 +5,5 @@
     --storage.tsdb.path=/opt/prometheus/data \
     --web.listen-address=:9090 &
 
-/opt/grafana/bin/grafana-server \
-    --homepath=/opt/grafana \
-    --config=/opt/grafana/conf/defaults.ini \
-    web &
 
 exec "$@"
