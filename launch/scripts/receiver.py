@@ -64,7 +64,7 @@ packets_lost_p = Counter('packets_lost_total', 'Total packets lost')
 process_cpu_p = Gauge('process_cpu_usage', 'CPU usage of the reveiver')
 total_cpu_p = Gauge('total_cpu_usage', 'Total CPU usage')
 latency_p = Histogram('latency_ms', 'Packet latency in milliseconds',
-                      buckets=[0.01, 0.05, 0.1, 0.5, 1, 5, 10, 50, 100])
+                      buckets=[0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 25, 50, 100])
 grafana_cpu_usage_p = Gauge('grafana_cpu_usage', 'CPU usage of grafana')
 grafana_mem_p = Gauge('grafana_memory_bytes', 'Grafana memory usage')
 receiver_mem_p = Gauge('receiver_memory_bytes', 'Receiver memory usage')
@@ -121,7 +121,7 @@ try:
         elif expected_seq < seq:
             packets_lost += (seq - expected_seq)
             packets_lost_p.inc(seq - expected_seq)
-            expected_seq += packets_lost 
+            expected_seq = seq + 1 
 
         elif expected_seq > seq:
             packets_out_of_order += 1 
