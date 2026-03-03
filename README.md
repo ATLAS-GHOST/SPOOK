@@ -67,8 +67,7 @@ After we have built our Docker image, we can run the image. Grafana and Promethe
    --name monitoring \
    --cpus="1.0" \
    --memory="1024m" \
-   monitoring-stack \
-   sleep infinity
+   monitoring-stack
    ```
 
 This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names it `monitoring` and maps host ports for Prometheus & Grafana of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures PID #1 stays alive after entrypoint.sh finishes.  
