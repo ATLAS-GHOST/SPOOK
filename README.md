@@ -32,6 +32,23 @@ In order to get the repository that containes all the file we need, run:
 
 This will get the Docker folder, which containss the Dockerfile to launch Grafana & Prometheus via the entrypoint shell script. It will also get the launch files, which contain the receiver.py and sender.py, ready for packet testing. 
 
+Create a virtual environment, where we can install all our dependancies:
+
+2. `cd SPOOK`
+
+Then create a virtual environment:
+
+3. `python3 -m venv venv`
+
+Then activate the environment by:
+
+4. `source venv/bin/activate`
+
+Setup the venv:
+
+5. `pip install --upgrade pip`
+6. `pip install prometheus_client psutil`
+
 ### 2. Launching The Grafana & Prometheus Docker
 
 Navigate to the Docker directory using:
@@ -46,7 +63,7 @@ Once Docker is running, we can build our image. The image is called monitoring-s
 
 3. `docker build -t monitoring-stack .`
 
-This image is based on Alpine Linux, and is `HOW MANY MB IS IT? HOW MUCH CPU AND RAM DOES IT USE?`. Then, Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
+This image is based on Alpine Linux, and is `415.2MiB in total and uses roughly 5% of the CPU`. Then, Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
 
    a. `prometheus.yml` provides the 3 endpoints for Prometheus to scrape. These are 'prometheus', 'udp_receiver' and 'node'. 'udp_receiver' is the receiver.py file running on the host system, and 'node' is the node_exporter endpoint, which gives NIC metrics used in Grafana. Both use the Linux default Docker bridge gateway '172.17.0.1' and are connected to ports 8000 and 9100 respectively. These ports are seperate from the host ports, so it is best to not change them here. You may have to change the bridge gateway IP if '172.12.0.1' is not the default for your device.
 
@@ -70,16 +87,16 @@ After we have built our Docker image, we can run the image. Grafana and Promethe
    monitoring-stack
    ```
 
-This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names it `monitoring` and maps host ports for Prometheus & Grafana of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM. Lastly, the command `sleep infinity` ensures PID #1 stays alive after entrypoint.sh finishes.  
+This command runs the `monitoring-stack` image in detached mode (using -d, which frees up the terminal for other commands), names it `monitoring` and maps host ports for Prometheus & Grafana of 9090 and 3000 to Docker's port of 9090 and 3000 respectively. You can change the local port you want to use by changing the initial port supplied in the command, as such: `-p <YOUR-PORT>:9090 -p <YOUR-PORT>:3000`. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM.
 
 5. If needed, clean up old containers which may have similar names:  
    ```docker rm monitoring```
 
 ### 3. Starting node_exporter
 
-Now, it is important you launch node_exporter, which allows for ethernet and NIC packet metrics visualisation in Grafana. In order to start node_exporter after downloading it:
+Now, it is important you launch node_exporter, which allows for ethernet and NIC packet metrics visualisation in Grafana. In order to start node_exporter after downloading it, open a new terminal:
 
-1. `cd /path/to/node_exporter` and then `./node_exporter` in a new terminal.
+1. `cd /path/to/node_exporter` and then `./node_exporter`.
 
 This will now send metrics to `http://localhost:9100/` and can be accessed there
 
