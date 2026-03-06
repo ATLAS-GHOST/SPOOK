@@ -5,6 +5,7 @@ import psutil
 import subprocess
 import os
 import glob
+import docker
 from prometheus_client import start_http_server, Counter, Gauge, Histogram
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -69,11 +70,14 @@ grafana_cpu_usage_p = Gauge('grafana_cpu_usage', 'CPU usage of grafana')
 grafana_mem_p = Gauge('grafana_memory_bytes', 'Grafana memory usage')
 receiver_mem_p = Gauge('receiver_memory_bytes', 'Receiver memory usage')
 
-grafana_pid = int(subprocess.check_output(
-    ["docker", "inspect", "--format", "{{.State.Pid}}", "monitoring"]
-).strip())
 
-print(grafana_pid)
+
+# Docker client (connects to local Docker daemon)
+docker_client = docker.from_env()
+
+# Get container object
+container = docker_client.containers.get("monitoring")
+
 
 
 pcie_rx_overflow_p = Gauge('pcie_rx_overflow', 'PCIe buffer overflow')
@@ -97,7 +101,7 @@ seq_samples = []
 start_http_server(8000)   #for prometheus
 
 process = psutil.Process()
-grafana_process = psutil.Process(grafana_pid)
+
 
 try:
     while True:
@@ -143,12 +147,39 @@ try:
             # Update Prometheus metrics
             process_cpu_p.set(process_cpu_percent)
             total_cpu_p.set(total_cpu_percent)
-            grafana_cpu_usage_p.set(grafana_process.cpu_percent(interval=0))
+            
+
+            stats = container.stats(stream=False)
+
+            cpu_delta = stats["cpu_stats"]["cpu_usage"]["total_usage"] - \
+                        stats["precpu_stats"]["cpu_usage"]["total_usage"]
+
+            system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
+                        stats["precpu_stats"]["system_cpu_usage"]
+
+            # Safe CPU core count handling
+            percpu = stats["cpu_stats"]["cpu_usage"].get("percpu_usage")
+
+            if percpu:
+                cpu_count = len(percpu)
+            else:
+                cpu_count = os.cpu_count() or 1
+
+            if system_delta > 0:
+                cpu_percent = (cpu_delta / system_delta) * cpu_count * 100.0
+            else:
+                cpu_percent = 0.0
+
+            # --- MEMORY ---
+            memory_usage = stats["memory_stats"]["usage"]
+
+            # Update Prometheus metrics
+            grafana_cpu_usage_p.set(cpu_percent)
+            grafana_mem_p.set(memory_usage)
 
             
 
             receiver_mem_p.set(process.memory_info().rss)
-            grafana_mem_p.set(grafana_process.memory_info().rss)
 
 
             if pcie_path:
