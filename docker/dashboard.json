@@ -558,7 +558,7 @@
           "refId": "B"
         }
       ],
-      "title": "Packets received ",
+      "title": "Packets received (Node)",
       "type": "timeseries"
     },
     {
@@ -666,7 +666,7 @@
           "refId": "A"
         }
       ],
-      "title": "Packets sent",
+      "title": "Packets sent (Node)",
       "type": "timeseries"
     },
     {
@@ -773,7 +773,7 @@
           "refId": "B"
         }
       ],
-      "title": "RX Packets dropped",
+      "title": "RX Packets dropped (Node)",
       "type": "timeseries"
     },
     {
@@ -882,7 +882,7 @@
           "refId": "B"
         }
       ],
-      "title": "RX Megabytes (NIC)",
+      "title": "RX Megabytes (Node)",
       "type": "timeseries"
     },
     {
@@ -1164,7 +1164,7 @@
             "uid": "prometheus-uid"
           },
           "editorMode": "code",
-          "expr": "rate(packets_received_total[10s])",
+          "expr": "rate(packets_received_total[15s])",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -2341,5 +2341,5 @@
   "timezone": "browser",
   "title": "SPOOK",
   "uid": "adg4dhw",
-  "version": 3
+  "version": 1
 }

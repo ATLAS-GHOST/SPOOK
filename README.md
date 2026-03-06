@@ -12,8 +12,9 @@ Before you begin, make sure you have the following:
 - Python virtual environment (venv)
 - node_exporter
 - prometheus_client
+- docker (pip)
 - Ports 8000 & 9100 free for Prometheus scraping, used by receiver.py and node_exporter respectively 
-     (If you want to change the ports, please do so manually, change port 8000 and 9100 in `prometheus.yml` and port 8000 in `receiver.py` 
+     (If you want to change the ports, please do so manually, change port 8000 and 9100 in `prometheus.yml` and port 8000 in `receiver.py`) 
 
 Please run Python-related components inside a virtual environment (`venv`).
 
@@ -47,7 +48,7 @@ Then activate the environment by:
 Setup the venv:
 
 5. `pip install --upgrade pip`
-6. `pip install prometheus_client psutil`
+6. `pip install prometheus_client psutil docker`
 
 ### 2. Launching The Grafana & Prometheus Docker
 
@@ -63,7 +64,7 @@ Once Docker is running, we can build our image. The image is called monitoring-s
 
 3. `docker build -t monitoring-stack .`
 
-This image is based on Alpine Linux, and is `415.2MiB in total and uses roughly 5% of the CPU`. Then, Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
+This image is based on Alpine Linux, and is `415.2MiB` in total and uses roughly `5%` of the CPU. Then, Prometheus and Grafana binaries are downloaded from GitHub, unzipped, and residuals are deleted. Configuration files are then added:
 
    a. `prometheus.yml` provides the 3 endpoints for Prometheus to scrape. These are 'prometheus', 'udp_receiver' and 'node'. 'udp_receiver' is the receiver.py file running on the host system, and 'node' is the node_exporter endpoint, which gives NIC metrics used in Grafana. Both use the Linux default Docker bridge gateway '172.17.0.1' and are connected to ports 8000 and 9100 respectively. These ports are seperate from the host ports, so it is best to not change them here. You may have to change the bridge gateway IP if '172.12.0.1' is not the default for your device.
 
@@ -164,4 +165,4 @@ To verify:
 
 To stop the container and its images, run:
 
-1. docker stop monitoring && docker rm monitoring
+1. `docker stop monitoring && docker rm monitoring`
