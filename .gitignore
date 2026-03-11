@@ -3,4 +3,5 @@ __pycache__/
 .env
 TimeKeeping.txt
 OLD/
-snapshot/prometheus_snapshot
+snapshot/prometheus_snapshot/*
+!snapshot/prometheus_snapshot/.gitignore
