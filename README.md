@@ -84,12 +84,14 @@ The entrypoint script launches Prometheus, OTEL, and Grafana. The script also en
 Run the container:
 
 4.  
-   ```docker run -d \
+  ```
+  docker run -d \
   -p 9090:9090 -p 3000:3000 -p 4318:4318 -p 9464:9464 \
   --name monitoring \
   --cpus="1.0" \
   --memory="1024m" \
-  monitoring-stack```
+  monitoring-stack
+  ```
 
 9090 → Prometheus UI
 3000 → Grafana UI
