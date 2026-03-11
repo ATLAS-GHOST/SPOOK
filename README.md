@@ -93,10 +93,12 @@ Run the container:
   monitoring-stack
   ```
 
-9090 → Prometheus UI
-3000 → Grafana UI
-4318 → OTLP receiver (metrics ingestion from scripts)
-9464 → Prometheus exporter endpoint for scraping. This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM.
+Prometheus UI: 9090   
+Grafana UI: 3000  
+OTLP receiver (metrics ingestion from scripts): 4318  
+Prometheus exporter endpoint for scraping: 9464    
+
+This command also limits Grafana to a maximum of 1 CPU core and 1024 MB of RAM.
 
 5. If needed, clean up old containers which may have similar names:  
    ```docker rm monitoring```
@@ -136,7 +138,7 @@ You can save a Prometheus snapshot:
 
 This saves a snaphot of all the metrics till current in the folder `./prometheus_snapshot`
 
-3. Copy the ID of the snapshot including parent folder. Example:
+3. Copy the ID of the snapshot including parent folder from the output message of the command. Example:
 
 `./prometheus_snapshot/20260311T144551Z-0acced28a0e1b105`
 
