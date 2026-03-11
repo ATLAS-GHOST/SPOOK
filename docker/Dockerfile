@@ -32,6 +32,5 @@ COPY otel-collector-config.yaml /etc/otel/config.yaml
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 9090 3000
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/opt/grafana/bin/grafana-server", "--homepath=/opt/grafana", "--config=/opt/grafana/conf/defaults.ini", "web"]

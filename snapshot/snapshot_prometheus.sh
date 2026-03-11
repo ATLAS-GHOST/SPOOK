@@ -1,16 +1,13 @@
 #!/bin/bash
 
-# Name of your container
 CONTAINER_NAME="monitoring"
 
-# Host folder where snapshots will be stored
 HOST_SNAPSHOT_DIR="./prometheus_snapshot"
 
-# Ensure folder exists
 mkdir -p "$HOST_SNAPSHOT_DIR"
 
 # Trigger snapshot via Prometheus admin API
-SNAPSHOT_JSON=$(curl -s -XPOST http://localhost:9090/api/v1/admin/tsdb/snapshot)
+SNAPSHOT_JSON=$(curl -s -XPOST http://localhost:9090/api/v1/admin/tsdb/snapshot) 
 
 # Parse snapshot ID from JSON
 SNAPSHOT_ID=$(echo "$SNAPSHOT_JSON" | grep -oP '(?<="name":")[^"]+')

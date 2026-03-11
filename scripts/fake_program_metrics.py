@@ -1,56 +1,64 @@
 import random
 import time
-
+import argparse
 from opentelemetry import metrics
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.view import View, ExplicitBucketHistogramAggregation
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 
+def main(collector_ip):
+    exporter = OTLPMetricExporter(endpoint="http://localhost:4318/v1/metrics")
 
-exporter = OTLPMetricExporter(endpoint="http://localhost:4318/v1/metrics")
+    reader = PeriodicExportingMetricReader(
+        exporter,
+        export_interval_millis=1000
+    )
 
-reader = PeriodicExportingMetricReader(
-    exporter,
-    export_interval_millis=1000
-)
-
-provider = MeterProvider(
-    metric_readers=[reader],
-    views=[
-        View(
-            instrument_name="program_packet_latency_ms",
-            aggregation=ExplicitBucketHistogramAggregation(
-                boundaries=[1,2,3,4,5,6,7,8,9,10]
+    provider = MeterProvider(
+        metric_readers=[reader],
+        views=[
+            View(
+                instrument_name="program_packet_latency_ms",
+                aggregation=ExplicitBucketHistogramAggregation(
+                    boundaries=[1,2,3,4,5,6,7,8,9,10]
+                )
             )
-        )
-    ],
-)
+        ],
+    )
 
-metrics.set_meter_provider(provider)
+    metrics.set_meter_provider(provider)
 
-meter = metrics.get_meter("program_metrics")
-
-
-# Program metrics
-packets_dropped = meter.create_counter("program_packets_dropped")
-
-processing_latency = meter.create_histogram("program_packet_latency_ms")
-
-packets_per_second = meter.create_gauge("program_packets_per_second")
-
-cpu_util = meter.create_gauge("program_cpu_utilization")
+    meter = metrics.get_meter("program_metrics")
 
 
-while True:
+    # Program metrics
+    packets_dropped = meter.create_counter("program_packets_dropped")
 
-    packets_per_second.set(random.randint(10000,80000))
+    processing_latency = meter.create_histogram("program_packet_latency_ms")
 
-    if random.random() < 0.02:
-        packets_dropped.add(1)
+    packets_per_second = meter.create_gauge("program_packets_per_second")
 
-    processing_latency.record(max(0, random.gauss(5,1)))
+    cpu_util = meter.create_gauge("program_cpu_utilization")
 
-    cpu_util.set(random.uniform(10,70))
 
-    time.sleep(1)
+    while True:
+
+        packets_per_second.set(random.randint(10000,80000))
+
+        if random.random() < 0.02:
+            packets_dropped.add(1)
+
+        processing_latency.record(max(0, random.gauss(5,1)))
+
+        cpu_util.set(random.uniform(10,70))
+
+        time.sleep(1)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Fake GPU Metrics Sender")
+    parser.add_argument("--collector_ip", default="localhost", help="IP address of OTLP collector (default: localhost)")
+
+    args = parser.parse_args()
+
+    main(args.collector_ip)
