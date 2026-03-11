@@ -145,6 +145,8 @@ This saves a snaphot of all the metrics till current in the folder `./prometheus
 
 ### 6. Restoring Prometheus snapshots
 
+Snapshots can be restored, even after the container has been stopped. The only condition is that the `./snapshot_prometheus.sh` command has been run before.
+
 1. in the `SPOOK/snapshot` directory, run `./restore_snapshot.sh `<location-of-id>`. Example:
 
 `./restore_snapshot.sh ./prometheus_snapshot/20260311T144551Z-0acced28a0e1b105`
